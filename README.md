@@ -55,7 +55,7 @@ python anonymization transformation/vcf_anonymizer.py \
 
 An index file is also generated automatically for the output VCF (e.g., `.tbi` or `.csi`, depending on the environment).
 
----
+
 
 ### Verifier
 
@@ -69,7 +69,7 @@ python anonymization validation/vcf_anonymization_verifier.py \
 **Matching rule**: the anonymized filename uses the substring after `anony_` as the original filename
 (e.g., `high_0.01_anony_sample2.vcf.gz` → `sample2.vcf.gz`).
 
----
+
 
 ## Example
 
