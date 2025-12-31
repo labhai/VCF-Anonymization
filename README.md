@@ -75,7 +75,7 @@ python anonymization validation/vcf_anonymization_verifier.py \
 
 The example below uses the demo data under the `test/` folder.
 
-### 1) Prepare demo input folders
+### 1. Prepare demo input folders
 
 ```
 mkdir -p ./demo_origin_vcfs ./demo_anonymized_vcfs
@@ -83,9 +83,9 @@ cp ./test/sample2.vcf.gz*   ./demo_origin_vcfs/
 cp ./test/sample3.vcf.bgz*  ./demo_origin_vcfs/
 ```
 
-### 2) Anonymization
+### 2. Anonymization
 
-#### (1) Run High-level anonymization
+#### Run High-level anonymization
 
 ```bash
 python anonymization transformation/vcf_anonymizer.py \
@@ -95,7 +95,7 @@ python anonymization transformation/vcf_anonymizer.py \
   --maf 0.01
 ```
 
-#### (2) Run Low-level anonymization
+#### Run Low-level anonymization
 
 ```bash
 python anonymization transformation/vcf_anonymizer.py \
@@ -104,7 +104,7 @@ python anonymization transformation/vcf_anonymizer.py \
   --level low
 ```
 
-### 3) Validation
+### 3. Validation
 
 The verifier takes the original directory (`-o`) and the anonymized directory (`-a`), then validates files by matching them 1:1 using the filename rule.
 
