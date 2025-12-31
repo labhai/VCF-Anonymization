@@ -1,10 +1,7 @@
 ## 샘플 파일 예시  
  - IGSR chr10: `sample2.vcf.gz`  
  - gnomAD chr21: `sample3.vcf.bgz`
- - 업로드 용량문제로 `sample2.vcf.gz`, `sample3.vcf.bgz` 를 드라이브에 업로드 하였음
- 
-**링크**
- - https://drive.google.com/drive/folders/1JN3Fvuv6b_JbqYwq1Dm-XOR_vt1l7A0o
+
 
 ## IGSR
 
