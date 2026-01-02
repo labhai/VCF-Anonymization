@@ -15,7 +15,7 @@ This is an anonymization tool designed to selectively remove/replace information
 ## Download VCF Anonymization
 
 ```
-git clone 
+git clone https://github.com/labhai/VCF-Anonymization.git
 ```
 
 ## Requirements and Install
