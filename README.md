@@ -27,7 +27,7 @@ This creates a VCF-Anonymization directory containing the scripts and demo index
 
 ## Requirements and Install
 
-### Requirments
+### Requirements
 This tool runs in a Python environment and requires the `pysam` package.
 
  - Python 3.9+ (recommended: 3.10+)
@@ -151,8 +151,6 @@ python vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 
 ## Test Dataset (Demo Data)
 
-⚠️ **Important Note**: The `testdata/` folder contains index files only for the demo VCFs (due to file size limits).
-
 **Included (index only)**
 
 * `sample2.vcf.gz.csi`
@@ -173,7 +171,7 @@ testdata/
 ├─ sample2.vcf.gz.csi
 ├─ sample3.vcf.bgz
 ├─ sample3.vcf.bgz.tbi
-└─ download.md
+└─ README.md
 ```
 
 In addition, the data sources and download instructions are described in:
