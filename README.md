@@ -20,15 +20,37 @@ git clone https://github.com/labhai/VCF-Anonymization.git
 
 ## Requirements and Install
 
+### Requirments
 This tool runs in a Python environment and requires the `pysam` package.
 
-```
-pip install pysam
-```
+ - Python 3.9+ (권장: 3.10+)
+ - Git (선택: 레포 clone 시)
+ - Python package: 'pysam'
 
 ⚠️ **Important Note**: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
 The demo setup in `testdata/` provides the corresponding index files (VCF files are downloaded separately; see below).
 
+### Install
+아래 설치는 가상환경(.venv)을 사용합니다.
+설치 후 설치 성공 여부를 바로 확인하는 체그 명령어까지 포함되어 있습니다.
+
+#### macOS / Linux
+```
+python3 -m venv .venv # venv 생성
+source .venv/bin/activate # venv 활성화
+python -m pip install --upgrade pip setuptools wheel # 3) pip 최신화 (pysam wheel 인식률 향상)
+python -m pip install pysam # 4) 의존성 설치
+python -c "import pysam; print('pysam version:', pysam.__version__)" # 5) 설치 성공 확인 (에러 없이 버전이 출력되어야 정상)
+```
+
+#### Windows (PowerShell)
+```
+py -m venv .venv # 1) venv 생성
+.\.venv\Scripts\Activate.ps1 # 2) venv 활성화
+python -m pip install --upgrade pip setuptools wheel # 3) pip 최신화 (pysam wheel 인식률 향상)
+python -m pip install pysam # 4) 의존성 설치
+python -c "import pysam; print('pysam version:', pysam.__version__)" # 5) 설치 성공 확인 (에러 없이 버전이 출력되어야 정상)
+```
 
 ## Usage
 
