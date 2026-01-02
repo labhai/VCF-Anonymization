@@ -151,7 +151,7 @@ python3 vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 
 ## Test Dataset (Demo Data)
 
-⚠️ **Important Note**: The `testdata/` folder contains **index files only** for the demo VCFs (due to file size limits).
+⚠️ **Important Note**: The `testdata/` folder contains index files only for the demo VCFs (due to file size limits).
 
 **Included (index only)**
 
