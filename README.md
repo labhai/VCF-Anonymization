@@ -105,68 +105,50 @@ python vcf_anonymization_verifier.py \
   -a <anonymized_dir> \
   --maf 0.01
 ```
+The verifier takes the original directory (`-o`) and the anonymized directory (`-a`), then validates files by matching them 1:1 using the filename rule.
 
 **Matching rule**: the anonymized filename uses the substring after `anony_` as the original filename
 (e.g., `high_0.01_anony_sample2.vcf.gz` → `sample2.vcf.gz`).
-
-
-
-## Example
-
-The example below uses the demo dataset under `testdata/`.
-
-### 1. Prepare demo input/output folders
-
-```bash
-mkdir -p ./demo_origin_vcfs ./demo_anonymized_vcfs
-cp ./testdata/sample2.vcf.gz*   ./demo_origin_vcfs/
-cp ./testdata/sample3.vcf.bgz*  ./demo_origin_vcfs/
-```
-
-### 2. Run Anonymization
-
-#### Run High-level anonymization
-
-```bash
-python vcf_anonymizer.py \
-  -i ./demo_origin_vcfs \
-  -o ./demo_anonymized_vcfs \
-  --level high \
-  --maf 0.01
-```
-
-#### Run Low-level anonymization
-
-```bash
-python vcf_anonymizer.py \
-  -i ./demo_origin_vcfs \
-  -o ./demo_anonymized_vcfs \
-  --level low
-```
-
-### 3. Run Validation
-
-The verifier takes the original directory (`-o`) and the anonymized directory (`-a`), then validates files by matching them 1:1 using the filename rule.
-
-* **Matching rule**: the substring after `anony_` in the anonymized filename is treated as the original filename
-  (e.g., `high_0.01_anony_sample2.vcf.gz` → original: `sample2.vcf.gz`)
-* The anonymization level is inferred from the filename prefix:
-
-  * `high_` → high validation (metadata + STR + MAF)
-  * `low_` → low validation (metadata only)
-
-```
-python vcf_anonymization_verifier.py \
-  -o ./demo_origin_vcfs \
-  -a ./demo_anonymized_vcfs \
-  --maf 0.01
-```
 
 The validation results are saved as a CSV file under the `./reports/` folder after execution
 (default filename: `VCF_anonymization_verification_report.csv`).
 If a file with the same name already exists, new reports will be created with suffixes like `_2`, `_3`, …
 
+## Example
 
+This quickstart follows the same demo workflow described in the technical guide:
+`testdata/` (input) → `anonydata/` (output) → verification report.
+
+### 1. Prepare demo input/output folders
+This repository includes index files only due to file size limits. Download the demo VCFs from Google Drive and place them into `testdata/` so the filenames match the index files.
+
+See: `testdata/README.md` for data sources and download instructions.
+
+Expected structure:
+```
+testdata/
+├─ sample2.vcf.gz
+├─ sample2.vcf.gz.csi
+├─ sample3.vcf.bgz
+├─ sample3.vcf.bgz.tbi
+└─ README.md
+```
+
+### 2. Run high-level anonymization
+```bash
+python3 vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
+```
+
+### 3. Run Low-level anonymization
+
+```bash
+python3 vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
+```
+
+### 4. Run Verification
+```
+python3 vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
+```
 
 ## Test Dataset (Demo Data)
 
