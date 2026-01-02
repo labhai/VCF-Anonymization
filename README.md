@@ -13,7 +13,7 @@ This is an anonymization tool designed to selectively remove/replace information
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
   Demo dataset folder for quick testing.
-  - Due to file size limits, this repository provides index files only by default.
+  - this repository provides index files only by default (due to file size limits).
   - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
   - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
@@ -23,19 +23,16 @@ Clone this repository to your local machine:
 git clone https://github.com/labhai/VCF-Anonymization.git
 cd VCF-Anonymization
 ```
-This creates a VCF-Anonymization directory containing the scripts and demo index files.
 
 ## Requirements and Install
 
 ### Requirements
-This tool runs in a Python environment and requires the `pysam` package.
-
  - Python 3.9+ (recommended: 3.10+)
  - Git (optional, only if you clone the repository)
  - Python package: 'pysam'
 
-⚠️ **Important Note**: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
-The demo setup in `testdata/` provides the corresponding index files (VCF files are downloaded separately; see below).
+⚠️ Important Note: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
+For the demo dataset, index files are included in `testdata/` (VCF files are downloaded separately; see Test Dataset (Demo Data)).
 
 ### Install (recommended: use a virtual environment)
 The steps below use a virtual environment (`.venv`) and include a quick verification command to confirm that `pysam` was installed successfully.
@@ -53,15 +50,14 @@ python -c "import pysam; print('pysam version:', pysam.__version__)"
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
-py -m pip install --upgrade pip setuptools wheel
-py -m pip install pysam
-py -c "import pysam; print('pysam version:', pysam.__version__)"
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install pysam
+python -c "import pysam; print('pysam version:', pysam.__version__)"
 ```
 If Activate.ps1 is blocked by execution policy, run this once in the same PowerShell window and try again:
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
 
 ## Usage
 
@@ -94,10 +90,7 @@ python vcf_anonymizer.py \
 
 An index file is also generated automatically for the output VCF (e.g., `.tbi` or `.csi`, depending on the environment).
 
-
-
 ### Verifier
-
 ```bash
 python vcf_anonymization_verifier.py \
   -o <origin_dir> \
@@ -113,15 +106,12 @@ The validation results are saved as a CSV file under the `./reports/` folder aft
 (default filename: `VCF_anonymization_verification_report.csv`).
 If a file with the same name already exists, new reports will be created with suffixes like `_2`, `_3`, …
 
-## Example
-
-This quickstart follows the same demo workflow described in the technical guide:
-`testdata/` (input) → `anonydata/` (output) → verification report.
+## Example (Quickstart)
+This quickstart follows the same demo workflow: `testdata/` (input) → `anonydata/` (output) → verification report.
 
 ### 1. Prepare demo input/output folders
-This repository includes index files only due to file size limits. Download the demo VCFs from Google Drive and place them into `testdata/` so the filenames match the index files.
-
-See: `testdata/README.md` for data sources and download instructions.
+Before running, download demo VCFs and place them into `testdata/` so filenames match the index files.
+See: `testdata/README.md`
 
 Expected structure:
 ```
@@ -163,19 +153,9 @@ Download the corresponding VCF files from [Google Drive](https://drive.google.co
 * `sample2.vcf.gz`
 * `sample3.vcf.bgz`
 
-After downloading, place them into the `testdata/` directory so that filenames match the index files:
-
-```
-testdata/
-├─ sample2.vcf.gz
-├─ sample2.vcf.gz.csi
-├─ sample3.vcf.bgz
-├─ sample3.vcf.bgz.tbi
-└─ README.md
-```
+After downloading, place them into the `testdata/` directory so that filenames match the index files.
 
 In addition, the data sources and download instructions are described in:
-
 `testdata/README.md`
 
 * Download chromosome-level VCFs from IGSR (1000 Genomes FTP)
