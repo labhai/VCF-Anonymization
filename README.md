@@ -11,7 +11,7 @@ This is an anonymization tool designed to selectively remove/replace information
   - `low` : header/metadata only
   - `high` : metadata + STR masking + rare-variant ALT masking by MAF threshold
 ### `vcf_anonymization_verifier.py`
-  - Compare original vs. anonymized VCFs and export a CSV report
+  Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
   Demo dataset folder for quick testing.
   - Due to file size limits, this repository provides index files only by default.
