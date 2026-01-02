@@ -12,6 +12,12 @@ This is an anonymization tool designed to selectively remove/replace information
 ### `vcf_anonymization_verifier.py`
   - Compare original vs. anonymized VCFs and export a CSV report
 
+## Download VCF Anonymization
+
+```
+git clone 
+```
+
 ## Requirements and Install
 
 This tool runs in a Python environment and requires the `pysam` package.
