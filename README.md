@@ -7,57 +7,69 @@ This is an anonymization tool designed to selectively remove/replace information
 ## Repository Structure
 
 ### `vcf_anonymizer.py`
+  Anonymizes VCFs with two levels:
   - `low` : header/metadata only
   - `high` : metadata + STR masking + rare-variant ALT masking by MAF threshold
 ### `vcf_anonymization_verifier.py`
   - Compare original vs. anonymized VCFs and export a CSV report
+### `testdata/`
+  Demo dataset folder for quick testing.
+  - Due to file size limits, this repository provides index files only by default.
+  - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
+  - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
 ## Download VCF Anonymization
-
+Clone this repository to your local machine:
 ```
 git clone https://github.com/labhai/VCF-Anonymization.git
+cd VCF-Anonymization
 ```
+This creates a VCF-Anonymization directory containing the scripts and demo index files.
 
 ## Requirements and Install
 
 ### Requirments
 This tool runs in a Python environment and requires the `pysam` package.
 
- - Python 3.9+ (권장: 3.10+)
- - Git (선택: 레포 clone 시)
+ - Python 3.9+ (recommended: 3.10+)
+ - Git (optional, only if you clone the repository)
  - Python package: 'pysam'
 
 ⚠️ **Important Note**: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
 The demo setup in `testdata/` provides the corresponding index files (VCF files are downloaded separately; see below).
 
-### Install
-아래 설치는 가상환경(.venv)을 사용합니다.
-설치 후 설치 성공 여부를 바로 확인하는 체그 명령어까지 포함되어 있습니다.
+### Install (recommended: use a virtual environment)
+The steps below use a virtual environment (`.venv`) and include a quick verification command to confirm that `pysam` was installed successfully.
 
 #### macOS / Linux
-```
-python3 -m venv .venv # venv 생성
-source .venv/bin/activate # venv 활성화
-python -m pip install --upgrade pip setuptools wheel # 3) pip 최신화 (pysam wheel 인식률 향상)
-python -m pip install pysam # 4) 의존성 설치
-python -c "import pysam; print('pysam version:', pysam.__version__)" # 5) 설치 성공 확인 (에러 없이 버전이 출력되어야 정상)
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install pysam
+python -c "import pysam; print('pysam version:', pysam.__version__)"
 ```
 
 #### Windows (PowerShell)
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+py -m pip install --upgrade pip setuptools wheel
+py -m pip install pysam
+py -c "import pysam; print('pysam version:', pysam.__version__)"
 ```
-py -m venv .venv # 1) venv 생성
-.\.venv\Scripts\Activate.ps1 # 2) venv 활성화
-python -m pip install --upgrade pip setuptools wheel # 3) pip 최신화 (pysam wheel 인식률 향상)
-python -m pip install pysam # 4) 의존성 설치
-python -c "import pysam; print('pysam version:', pysam.__version__)" # 5) 설치 성공 확인 (에러 없이 버전이 출력되어야 정상)
+If Activate.ps1 is blocked by execution policy, run this once in the same PowerShell window and try again:
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
+
 
 ## Usage
 
 ### Anonymizer
 
-```
-python anonymization transformation/vcf_anonymizer.py \
+```bash
+python vcf_anonymizer.py \
   -i <input_vcf_dir> \
   -o <output_vcf_dir> \
   --level <low|high> \
@@ -87,8 +99,8 @@ An index file is also generated automatically for the output VCF (e.g., `.tbi` o
 
 ### Verifier
 
-```
-python anonymization validation/vcf_anonymization_verifier.py \
+```bash
+python vcf_anonymization_verifier.py \
   -o <origin_dir> \
   -a <anonymized_dir> \
   --maf 0.01
@@ -101,22 +113,22 @@ python anonymization validation/vcf_anonymization_verifier.py \
 
 ## Example
 
-The example below uses the demo data under the `testdata/` folder.
+The example below uses the demo dataset under `testdata/`.
 
-### 1. Prepare demo input folders
+### 1. Prepare demo input/output folders
 
-```
+```bash
 mkdir -p ./demo_origin_vcfs ./demo_anonymized_vcfs
 cp ./testdata/sample2.vcf.gz*   ./demo_origin_vcfs/
 cp ./testdata/sample3.vcf.bgz*  ./demo_origin_vcfs/
 ```
 
-### 2. Anonymization
+### 2. Run Anonymization
 
 #### Run High-level anonymization
 
 ```bash
-python anonymization transformation/vcf_anonymizer.py \
+python vcf_anonymizer.py \
   -i ./demo_origin_vcfs \
   -o ./demo_anonymized_vcfs \
   --level high \
@@ -126,13 +138,13 @@ python anonymization transformation/vcf_anonymizer.py \
 #### Run Low-level anonymization
 
 ```bash
-python anonymization transformation/vcf_anonymizer.py \
+python vcf_anonymizer.py \
   -i ./demo_origin_vcfs \
   -o ./demo_anonymized_vcfs \
   --level low
 ```
 
-### 3. Validation
+### 3. Run Validation
 
 The verifier takes the original directory (`-o`) and the anonymized directory (`-a`), then validates files by matching them 1:1 using the filename rule.
 
@@ -144,7 +156,7 @@ The verifier takes the original directory (`-o`) and the anonymized directory (`
   * `low_` → low validation (metadata only)
 
 ```
-python anonymization validation/vcf_anonymization_verifier.py \
+python vcf_anonymization_verifier.py \
   -o ./demo_origin_vcfs \
   -a ./demo_anonymized_vcfs \
   --maf 0.01
