@@ -21,7 +21,7 @@ pip install pysam
 ```
 
 ⚠️ **Important Note**: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
-The demo setup in `test/` provides the corresponding index files (VCF files are downloaded separately; see below).
+The demo setup in `testdata/` provides the corresponding index files (VCF files are downloaded separately; see below).
 
 
 ## Usage
@@ -73,14 +73,14 @@ python anonymization validation/vcf_anonymization_verifier.py \
 
 ## Example
 
-The example below uses the demo data under the `test/` folder.
+The example below uses the demo data under the `testdata/` folder.
 
 ### 1. Prepare demo input folders
 
 ```
 mkdir -p ./demo_origin_vcfs ./demo_anonymized_vcfs
-cp ./test/sample2.vcf.gz*   ./demo_origin_vcfs/
-cp ./test/sample3.vcf.bgz*  ./demo_origin_vcfs/
+cp ./testdata/sample2.vcf.gz*   ./demo_origin_vcfs/
+cp ./testdata/sample3.vcf.bgz*  ./demo_origin_vcfs/
 ```
 
 ### 2. Anonymization
@@ -130,7 +130,7 @@ If a file with the same name already exists, new reports will be created with su
 
 ## Test Dataset (Demo Data)
 
-⚠️ **Important Note**: The `test/` folder contains **index files only** for the demo VCFs (due to file size limits).
+⚠️ **Important Note**: The `testdata/` folder contains **index files only** for the demo VCFs (due to file size limits).
 
 **Included (index only)**
 
@@ -144,10 +144,10 @@ Download the corresponding VCF files from [Google Drive](https://drive.google.co
 * `sample2.vcf.gz`
 * `sample3.vcf.bgz`
 
-After downloading, place them into the `test/` directory so that filenames match the index files:
+After downloading, place them into the `testdata/` directory so that filenames match the index files:
 
 ```
-test/
+testdata/
 ├─ sample2.vcf.gz
 ├─ sample2.vcf.gz.csi
 ├─ sample3.vcf.bgz
@@ -157,7 +157,7 @@ test/
 
 In addition, the data sources and download instructions are described in:
 
-`test/download.md`
+`testdata/README.md`
 
 * Download chromosome-level VCFs from IGSR (1000 Genomes FTP)
 * Download chromosome-level genomes VCFs from the gnomAD downloads page
