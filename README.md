@@ -42,7 +42,7 @@ The steps below use a virtual environment (`.venv`) and include a quick verifica
 
 #### macOS / Linux
 ```bash
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 python -m pip install pysam
@@ -135,18 +135,18 @@ testdata/
 
 ### 2. Run high-level anonymization
 ```bash
-python3 vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
+python vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
 ### 3. Run Low-level anonymization
 
 ```bash
-python3 vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
+python vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 ```
 
 ### 4. Run Verification
 ```
-python3 vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
+python vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 ```
 
 ## Test Dataset (Demo Data)
