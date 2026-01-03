@@ -145,11 +145,7 @@ low_anony_sample2.vcf.gz: ok  100.00%(2/2)  (meta 2/2, variant 0/0)
 ```
 
 ## Notes
-
 * Only `.vcf.gz` and `.vcf.bgz` files are scanned in both origin/anonymized directories.
-* Validation is **site-level** by `(CHROM, POS)`. If multiple records share the same site, the last observed target definition may overwrite earlier ones.
-* For high-level verification:
-
-  * STR targets require ALT change **and** presence of `'N'` in ALT.
-  * MAF targets expect ALT to be masked as `"."` when still rare (`maf < --maf`).
-* Make sure anonymized filenames follow the expected prefix + `anony_` rule; otherwise matching may fail.
+* Validation is site-level by `(CHROM, POS)`. If multiple records share the same site, the last observed target definition may overwrite earlier ones.
+* STR targets require ALT change and presence of `'N'` in ALT.
+* When a MAF target remains rare (`maf < --maf`), ALT is expected to be masked as `"."`.
