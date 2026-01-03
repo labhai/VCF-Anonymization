@@ -68,20 +68,6 @@ The script scans all `.vcf.gz` / `.vcf.bgz` files in the origin directory and fi
 
 If no anonymized match exists, it prints a warning and skips that origin file.
 
-## Requirements
-
-- Python 3.9+
-- `pysam`
-
-Install from the repository root (recommended inside a virtual environment):
-
-```bash
-python -m pip install pysam
-```
-
-⚠️ If VCFs are compressed (`.vcf.gz` / `.vcf.bgz`), index files (`.tbi` or `.csi`) are required for `pysam.fetch()`.
-
-
 ## Usage
 
 Run from repository root:
