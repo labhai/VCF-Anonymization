@@ -5,7 +5,7 @@ This is an anonymization tool designed to selectively remove/replace information
 
 ## Repository Structure
 
-### `VCF_Anonymizer/vcf_anonymizer.py`
+### `vcf_anonymizer/vcf_anonymizer.py`
   Anonymizes VCFs with two levels:
   - `low` : header/metadata only
   - `high` : metadata + STR masking + rare-variant ALT masking by MAF threshold
@@ -78,13 +78,13 @@ testdata/
 
 ### 2. Run high-level anonymization
 ```bash
-python VCF_Anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
+python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
 ### 3. Run Low-level anonymization
 
 ```bash
-python VCF_Anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
+python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 ```
 
 ### 4. Run Verification
