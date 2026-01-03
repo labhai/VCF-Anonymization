@@ -1,18 +1,16 @@
-
 # VCF Anonymizer (`vcf_anonymizer.py`)
 
 `vcf_anonymizer.py` is a VCF anonymization script designed to reduce re-identification risk by anonymizing:
-- **VCF header/metadata** (common to all levels)
-- **ALT sequences** via **STR masking** (high level)
-- **rare variants** via **MAF-threshold-based ALT masking** (high level)
+- VCF header/metadata (common to all levels)
+- ALT sequences via STR masking (high level)
+- rare variants via MAF-threshold-based ALT masking (high level)
 
 It processes all compressed VCF files in an input directory (`.vcf.gz`, `.vcf.bgz`) and writes anonymized outputs to an output directory.  
-After writing each anonymized VCF, it also generates an **index file** using `pysam.tabix_index()`.
-
+After writing each anonymized VCF, it also generates an index file using `pysam.tabix_index()`.
 
 ## What this script does
 
-### 1) Metadata anonymization (always applied)
+### 1. Metadata anonymization (always applied)
 For each input VCF, it rewrites specific header lines:
 
 - `##cmdline=...` → replaced with `##cmdline=.`
@@ -20,29 +18,23 @@ For each input VCF, it rewrites specific header lines:
 
 All other header lines are preserved, and sample IDs are copied as-is.
 
-### 2) Variant anonymization (high level only)
+### 2. Variant anonymization (high level only)
 
-#### A. STR masking on ALT sequences
+#### STR masking on ALT sequences
 If `--level high`, the script detects STR-like repeats in ALT sequences using regex patterns defined by:
 
 - motif length: `--min-motif` to `--max-motif`
 - minimum repeat count: `--min-repeat`
 
 Masking rules:
-- motif length **1 bp**: replace the repeated segment fully with `N`
-- motif length **2–6 bp**: keep the first base of each motif and replace the rest with `N`
-- If multiple motifs could match, **only the first detected motif** is applied per ALT sequence.
+- motif length 1 bp: replace the repeated segment fully with `N`
+- motif length 2–6 bp: keep the first base of each motif and replace the rest with `N`
+- If multiple motifs could match, only the first detected motif is applied per ALT sequence.
 
-#### B. MAF-based rare variant masking (only if STR was NOT applied)
-If STR masking did not modify any ALT in a record, the script computes a **site-level MAF** from `INFO` and applies rare-variant masking:
+#### MAF-based rare variant masking (only if STR was NOT applied)
+If STR masking did not modify any ALT in a record, the script computes a site-level MAF from `INFO` and applies rare-variant masking:
 
 - If `maf < --maf`, ALT is replaced with `"."` (masked)
-
-MAF is derived in this priority order:
-1. `INFO/MAF` (if present)
-2. `INFO/AF` (compute ref AF = 1 - sum(AF); take min(ref, AFs))
-3. `INFO/AC` and `INFO/AN` (compute AFs = AC/AN; same ref/min logic)
-
 
 ## Requirements
 
@@ -116,28 +108,6 @@ pysam.tabix_index(output_path, preset="vcf", csi=True, force=True)
 ```
 
 So each output VCF will have an index file generated (typically `.csi` when `csi=True`).
-
-
-## Example
-
-### High-level anonymization (MAF=0.01)
-
-```bash
-python VCF_Anonymizer/vcf_anonymizer.py \
-  -i ./testdata \
-  -o ./anonydata \
-  --level high \
-  --maf 0.01
-```
-
-### Low-level anonymization
-
-```bash
-python VCF_Anonymizer/vcf_anonymizer.py \
-  -i ./testdata \
-  -o ./anonydata \
-  --level low
-```
 
 ## Expected Console Logs
 
