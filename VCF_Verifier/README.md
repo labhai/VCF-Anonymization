@@ -1,40 +1,72 @@
-# VCF Anonymizer (`vcf_anonymizer.py`)
+# VCF Anonymization Verifier (`vcf_anonymization_verifier.py`)
 
-`vcf_anonymizer.py` is a VCF anonymization script designed to reduce re-identification risk by anonymizing:
-- VCF header/metadata (common to all levels)
-- ALT sequences via STR masking (high level)
-- rare variants via MAF-threshold-based ALT masking (high level)
+`vcf_anonymization_verifier.py` validates whether anonymization rules were applied correctly by comparing:
+- an **original VCF directory** (`-o`)
+- an **anonymized VCF directory** (`-a`)
 
-It processes all compressed VCF files in an input directory (`.vcf.gz`, `.vcf.bgz`) and writes anonymized outputs to an output directory.  
-After writing each anonymized VCF, it also generates an index file using `pysam.tabix_index()`.
+It verifies:
+- **metadata anonymization** (header lines)
+- **variant anonymization** (STR masking / MAF-based ALT masking) for **high-level outputs**
 
-## What this script does
+Validation is performed at the **site level** (unique `(CHROM, POS)`), and results are saved as a **CSV report** under `./reports/`.
 
-### 1. Metadata anonymization (always applied)
-For each input VCF, it rewrites specific header lines:
+## What this script verifies
 
-- `##cmdline=...` → replaced with `##cmdline=.`
-- `##reference=...` → keeps only the filename (removes any path / `file://` prefix)
+### 1) Metadata verification (applies to both low/high)
+It checks whether the anonymized header contains expected anonymized metadata:
 
-All other header lines are preserved, and sample IDs are copied as-is.
+- If the original header contains `##cmdline=...`  
+  → anonymized header must contain `##cmdline=.`
 
-### 2. Variant anonymization (high level only)
+- If the original header contains `##reference=...`  
+  → anonymized header must contain a `##reference=` line **without path separators (`/`)**  
+  (i.e., path removed and filename-only form)
 
-#### STR masking on ALT sequences
-If `--level high`, the script detects STR-like repeats in ALT sequences using regex patterns defined by:
+> Note: this verifier checks the *presence/form* of anonymized metadata in the anonymized header.
 
-- motif length: `--min-motif` to `--max-motif`
-- minimum repeat count: `--min-repeat`
+### 2) Variant verification (high-level files only)
+For **high-level outputs** (filename prefix: `high_` or `strong_`), this verifier validates variant masking using a two-step approach:
 
-Masking rules:
-- motif length 1 bp: replace the repeated segment fully with `N`
-- motif length 2–6 bp: keep the first base of each motif and replace the rest with `N`
-- If multiple motifs could match, only the first detected motif is applied per ALT sequence.
+#### Step A. Collect anonymization targets from the original VCF
+It scans the original VCF and collects “target sites” that should be anonymized, based on:
+- **STR target**: any ALT contains an STR-like repeat pattern
+- **MAF target**: site-level MAF from `INFO` is `< --maf`
 
-#### MAF-based rare variant masking (only if STR was NOT applied)
-If STR masking did not modify any ALT in a record, the script computes a site-level MAF from `INFO` and applies rare-variant masking:
+**Priority rule:** if a site is both STR and MAF target, it is treated as **STR**  
+(same priority as the anonymizer).
 
-- If `maf < --maf`, ALT is replaced with `"."` (masked)
+Targets are stored as:
+- key: `(CHROM, POS)`
+- value: `kind = STR or MAF`, and `alt_orig = original ALT tuple`
+
+#### Step B. Check anonymized VCF at the same sites
+For each target site `(CHROM, POS)` in the anonymized VCF:
+
+- **STR target success condition**
+  - anonymized ALT is **different from** original ALT, and
+  - at least one ALT contains `'N'`
+
+- **MAF target success condition**
+  - First, recompute site-level MAF from anonymized record `INFO` (same logic as anonymizer: `MAF` → `AF` → `AC/AN`)
+  - If MAF cannot be computed (`None`): treated as **success**
+  - Else if MAF is still `< --maf`:
+    - ALT must be fully masked as `"."` (i.e., ALT is empty / `(".",)`)
+  - Else (no longer rare): treated as **success** (interpreted as reduced identifiability)
+
+
+## File matching rule (origin ↔ anonymized)
+
+This verifier matches files by filename using the substring after `anony_`.
+
+Example:
+- anonymized filename: `high_0.01_anony_sample2.vcf.gz`
+- matched original filename: `sample2.vcf.gz`
+
+The script scans all `.vcf.gz` / `.vcf.bgz` files in the origin directory and finds corresponding anonymized files in the anonymized directory using:
+
+- `f.split("anony_", 1)[-1] == <origin_filename>`
+
+If no anonymized match exists, it prints a warning and skips that origin file.
 
 ## Requirements
 
@@ -47,96 +79,101 @@ Install from the repository root (recommended inside a virtual environment):
 python -m pip install pysam
 ```
 
-⚠️ Input VCFs must be indexed when compressed (`.vcf.gz` / `.vcf.bgz`) so that `pysam.fetch()` can iterate records.
+⚠️ If VCFs are compressed (`.vcf.gz` / `.vcf.bgz`), index files (`.tbi` or `.csi`) are required for `pysam.fetch()`.
 
 
 ## Usage
 
-### Command (run from repository root)
+Run from repository root:
 
 ```bash
-python VCF_Anonymizer/vcf_anonymizer.py \
-  -i <input_vcf_dir> \
-  -o <output_vcf_dir> \
-  --level <low|high> \
-  [--maf 0.01] \
-  [--min-motif 1] \
-  [--max-motif 6] \
-  [--min-repeat 7]
+python VCF_Verifier/vcf_anonymization_verifier.py \
+  -o <origin_dir> \
+  -a <anonymized_dir> \
+  --maf 0.01
 ```
 
 ### Options
 
-* `-i, --input` : input VCF directory
+* `-o, --origin` : directory containing original VCF files
+* `-a, --anony` : directory containing anonymized VCF files
+* `--maf <float>` : MAF threshold used for identifying MAF targets (default: `0.01`)
 
-  * Script scans files ending with `.vcf.gz` or `.vcf.bgz` only.
-* `-o, --output` : output directory for anonymized VCFs
-
-  * Directory is created if it does not exist.
-* `--level {low,high}` : anonymization level
-
-  * `low` = metadata only
-  * `high` = metadata + STR masking + MAF-based ALT masking
-* `--maf <float>` : MAF threshold (default: `0.01`)
-
-  * Only meaningful in `high` mode.
-* `--min-motif <int>` (default: `1`)
-* `--max-motif <int>` (default: `6`)
-* `--min-repeat <int>` (default: `7`)
-
-  * STR detection parameters (motif length range and minimum repeats)
+> STR detection parameters are fixed in this script to:
+>
+> * min motif = 1, max motif = 6, min repeat = 7
+>   (same defaults as the anonymizer)
 
 
 ## Output
 
-### Output filename prefix
+### 1) CSV report
 
-* `low` : `low_anony_<original>`
-* `high`: `high_<maf>_anony_<original>`
+The report is saved under `./reports/` with the name:
 
-Examples:
+* `VCF_anonymization_verification_report.csv`
 
-* `low_anony_sample2.vcf.gz`
-* `high_0.01_anony_sample2.vcf.gz`
+If the file already exists, it creates:
 
-### Index generation
+* `VCF_anonymization_verification_report_2.csv`
+* `VCF_anonymization_verification_report_3.csv`
+* ...
 
-After writing each anonymized VCF, the script creates a Tabix index:
+### 2) Report columns
 
-```python
-pysam.tabix_index(output_path, preset="vcf", csi=True, force=True)
+| Column                | Description                                                                     |
+| --------------------- | ------------------------------------------------------------------------------- |
+| `filename`            | anonymized filename                                                             |
+| `anonymization_level` | inferred from prefix (`high_`/`strong_` → high, `low_`/`weak_` → low)           |
+| `anonymization_rate`  | overall pass rate in `% (masked/targets)` format                                |
+| `verification_result` | `ok` if all targets satisfied, else `fail`                                      |
+| `total_targets`       | metadata targets + variant targets                                              |
+| `metadata_targets`    | number of metadata checks required                                              |
+| `variant_targets`     | number of target sites `(CHROM, POS)` for variant anonymization (high only)     |
+| `metadata_masked`     | number of metadata checks passed                                                |
+| `variant_masked`      | number of variant target sites passed                                           |
+| `unmasked_positions`  | for `fail`, list of `CHROM:POS` that did not satisfy masking rules; `-` if none |
+
+
+## Expected console logs
+
+During execution, the script prints per pair:
+
+* `[CHECK] origin=<orig_filename>, anony=<anonymized_filename>`
+
+After finishing, it prints a summary:
+
+* total checked pairs
+* number of failed pairs (needs re-anonymization)
+* elapsed time
+* report path
+
+And then prints one-line results per anonymized file:
+
+```
+<filename>: <ok/fail>  <rate>  (meta x/y, variant x/y)
 ```
 
-So each output VCF will have an index file generated (typically `.csi` when `csi=True`).
-
-## Expected Console Logs
-
-The script prints progress per file:
-
-* `[+] Processing <filename>`
-* `[OK] Written → <output_path>`
-* `[OK] Index created → <output_path>.<index>`
-* A final summary with:
-
-  * total processed files
-  * elapsed time
-
-Example format:
+Example (format):
 
 ```
-[+] Processing sample2.vcf.gz
-[OK] Written → ./anonydata/high_0.01_anony_sample2.vcf.gz
-[OK] Index created → ./anonydata/high_0.01_anony_sample2.vcf.gz.tbi
+================ 검증 결과 요약 ================
+총 검증 파일 쌍 수 (origin-anony): 2
+재익명화 필요 파일 수: 1
+총 처리 시간: 3.214 sec
+리포트 저장 위치: /.../reports/VCF_anonymization_verification_report.csv
+================================================
 
-======================================
-[DONE] Total processed files : 2
-[TIME] Elapsed time          : 12.34 seconds
-======================================
+high_0.01_anony_sample2.vcf.gz: ok  100.00%(10/10)  (meta 2/2, variant 8/8)
+low_anony_sample2.vcf.gz: ok  100.00%(2/2)  (meta 2/2, variant 0/0)
 ```
 
 ## Notes / Pitfalls
 
-* Only `.vcf.gz` and `.vcf.bgz` files are processed.
-* In `high` mode, STR masking has priority.
-  MAF masking is applied only if STR masking did not modify the record.
-* Output indexing uses `csi=True`, so index extension may be `.csi` depending on the environment.
+* Only `.vcf.gz` and `.vcf.bgz` files are scanned in both origin/anonymized directories.
+* Validation is **site-level** by `(CHROM, POS)`. If multiple records share the same site, the last observed target definition may overwrite earlier ones.
+* For high-level verification:
+
+  * STR targets require ALT change **and** presence of `'N'` in ALT.
+  * MAF targets expect ALT to be masked as `"."` when still rare (`maf < --maf`).
+* Make sure anonymized filenames follow the expected prefix + `anony_` rule; otherwise matching may fail.
