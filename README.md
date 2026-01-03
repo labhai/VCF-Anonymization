@@ -13,7 +13,7 @@ This is an anonymization tool designed to selectively remove/replace information
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
   Demo dataset folder for quick testing.
-  - this repository provides index files only by default (due to file size limits).
+  - This repository provides index files only by default (due to file size limits).
   - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
   - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
@@ -78,18 +78,18 @@ testdata/
 
 ### 2. Run high-level anonymization
 ```bash
-python vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
+python VCF_Anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
 ### 3. Run Low-level anonymization
 
 ```bash
-python vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
+python VCF_Anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 ```
 
 ### 4. Run Verification
 ```
-python vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
+python VCF_Verifier/vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 ```
 
 ## Test Dataset (Demo Data)
