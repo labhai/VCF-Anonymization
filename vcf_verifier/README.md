@@ -69,7 +69,7 @@ If no anonymized match exists, it prints a warning and skips that origin file.
 Run from repository root:
 
 ```bash
-python VCF_Verifier/vcf_anonymization_verifier.py \
+python vcf_verifier/vcf_anonymization_verifier.py \
   -o <origin_dir> \
   -a <anonymized_dir> \
   --maf 0.01
