@@ -1,9 +1,69 @@
-## Usage
 
-### Anonymizer
+# VCF Anonymizer (`vcf_anonymizer.py`)
+
+`vcf_anonymizer.py` is a VCF anonymization script designed to reduce re-identification risk by anonymizing:
+- **VCF header/metadata** (common to all levels)
+- **ALT sequences** via **STR masking** (high level)
+- **rare variants** via **MAF-threshold-based ALT masking** (high level)
+
+It processes all compressed VCF files in an input directory (`.vcf.gz`, `.vcf.bgz`) and writes anonymized outputs to an output directory.  
+After writing each anonymized VCF, it also generates an **index file** using `pysam.tabix_index()`.
+
+
+## What this script does
+
+### 1) Metadata anonymization (always applied)
+For each input VCF, it rewrites specific header lines:
+
+- `##cmdline=...` → replaced with `##cmdline=.`
+- `##reference=...` → keeps only the filename (removes any path / `file://` prefix)
+
+All other header lines are preserved, and sample IDs are copied as-is.
+
+### 2) Variant anonymization (high level only)
+
+#### A. STR masking on ALT sequences
+If `--level high`, the script detects STR-like repeats in ALT sequences using regex patterns defined by:
+
+- motif length: `--min-motif` to `--max-motif`
+- minimum repeat count: `--min-repeat`
+
+Masking rules:
+- motif length **1 bp**: replace the repeated segment fully with `N`
+- motif length **2–6 bp**: keep the first base of each motif and replace the rest with `N`
+- If multiple motifs could match, **only the first detected motif** is applied per ALT sequence.
+
+#### B. MAF-based rare variant masking (only if STR was NOT applied)
+If STR masking did not modify any ALT in a record, the script computes a **site-level MAF** from `INFO` and applies rare-variant masking:
+
+- If `maf < --maf`, ALT is replaced with `"."` (masked)
+
+MAF is derived in this priority order:
+1. `INFO/MAF` (if present)
+2. `INFO/AF` (compute ref AF = 1 - sum(AF); take min(ref, AFs))
+3. `INFO/AC` and `INFO/AN` (compute AFs = AC/AN; same ref/min logic)
+
+
+## Requirements
+
+- Python 3.9+
+- `pysam`
+
+Install from the repository root (recommended inside a virtual environment):
 
 ```bash
-python vcf_anonymizer.py \
+python -m pip install pysam
+````
+
+⚠️ Input VCFs must be indexed when compressed (`.vcf.gz` / `.vcf.bgz`) so that `pysam.fetch()` can iterate records.
+
+
+## Usage
+
+### Command (run from repository root)
+
+```bash
+python VCF_Anonymizer/vcf_anonymizer.py \
   -i <input_vcf_dir> \
   -o <output_vcf_dir> \
   --level <low|high> \
@@ -13,34 +73,100 @@ python vcf_anonymizer.py \
   [--min-repeat 7]
 ```
 
-**Options**
+### Options
 
-* `-i` : input VCF directory
-* `-o` : output (anonymized results) directory
-* `--level` : `low` or `high`
-* `--maf` : MAF threshold (only meaningful for `high`, default: `0.01`)
-* `--min-motif`, `--max-motif`, `--min-repeat` : STR detection parameters
-  (default: motif length 1–6 bp, minimum 7 repeats)
+* `-i, --input` : input VCF directory
 
-**Output filename prefix**
+  * Script scans files ending with `.vcf.gz` or `.vcf.bgz` only.
+* `-o, --output` : output directory for anonymized VCFs
+
+  * Directory is created if it does not exist.
+* `--level {low,high}` : anonymization level
+
+  * `low` = metadata only
+  * `high` = metadata + STR masking + MAF-based ALT masking
+* `--maf <float>` : MAF threshold (default: `0.01`)
+
+  * Only meaningful in `high` mode.
+* `--min-motif <int>` (default: `1`)
+* `--max-motif <int>` (default: `6`)
+* `--min-repeat <int>` (default: `7`)
+
+  * STR detection parameters (motif length range and minimum repeats)
+
+
+## Output
+
+### Output filename prefix
 
 * `low` : `low_anony_<original>`
 * `high`: `high_<maf>_anony_<original>`
 
-An index file is also generated automatically for the output VCF (e.g., `.tbi` or `.csi`, depending on the environment).
+Examples:
 
-### Verifier
+* `low_anony_sample2.vcf.gz`
+* `high_0.01_anony_sample2.vcf.gz`
+
+### Index generation
+
+After writing each anonymized VCF, the script creates a Tabix index:
+
+```python
+pysam.tabix_index(output_path, preset="vcf", csi=True, force=True)
+```
+
+So each output VCF will have an index file generated (typically `.csi` when `csi=True`).
+
+
+## Example
+
+### High-level anonymization (MAF=0.01)
+
 ```bash
-python vcf_anonymization_verifier.py \
-  -o <origin_dir> \
-  -a <anonymized_dir> \
+python VCF_Anonymizer/vcf_anonymizer.py \
+  -i ./testdata \
+  -o ./anonydata \
+  --level high \
   --maf 0.01
 ```
-The verifier takes the original directory (`-o`) and the anonymized directory (`-a`), then validates files by matching them 1:1 using the filename rule.
 
-**Matching rule**: the anonymized filename uses the substring after `anony_` as the original filename
-(e.g., `high_0.01_anony_sample2.vcf.gz` → `sample2.vcf.gz`).
+### Low-level anonymization
 
-The validation results are saved as a CSV file under the `./reports/` folder after execution
-(default filename: `VCF_anonymization_verification_report.csv`).
-If a file with the same name already exists, new reports will be created with suffixes like `_2`, `_3`, …
+```bash
+python VCF_Anonymizer/vcf_anonymizer.py \
+  -i ./testdata \
+  -o ./anonydata \
+  --level low
+```
+
+## Expected Console Logs
+
+The script prints progress per file:
+
+* `[+] Processing <filename>`
+* `[OK] Written → <output_path>`
+* `[OK] Index created → <output_path>.<index>`
+* A final summary with:
+
+  * total processed files
+  * elapsed time
+
+Example format:
+
+```
+[+] Processing sample2.vcf.gz
+[OK] Written → ./anonydata/high_0.01_anony_sample2.vcf.gz
+[OK] Index created → ./anonydata/high_0.01_anony_sample2.vcf.gz.tbi
+
+======================================
+[DONE] Total processed files : 2
+[TIME] Elapsed time          : 12.34 seconds
+======================================
+```
+
+## Notes / Pitfalls
+
+* Only `.vcf.gz` and `.vcf.bgz` files are processed.
+* In `high` mode, **STR masking has priority**.
+  MAF masking is applied only if STR masking did not modify the record.
+* Output indexing uses `csi=True`, so index extension may be `.csi` depending on the environment.
