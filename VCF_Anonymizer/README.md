@@ -36,20 +36,6 @@ If STR masking did not modify any ALT in a record, the script computes a site-le
 
 - If `maf < --maf`, ALT is replaced with `"."` (masked)
 
-## Requirements
-
-- Python 3.9+
-- `pysam`
-
-Install from the repository root (recommended inside a virtual environment):
-
-```bash
-python -m pip install pysam
-```
-
-⚠️ Input VCFs must be indexed when compressed (`.vcf.gz` / `.vcf.bgz`) so that `pysam.fetch()` can iterate records.
-
-
 ## Usage
 
 ### Command (run from repository root)
