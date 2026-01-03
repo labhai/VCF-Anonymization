@@ -108,10 +108,5 @@ Download the corresponding VCF files from [Google Drive](https://drive.google.co
 
 After downloading, place them into the `testdata/` directory so that filenames match the index files.
 
-In addition, the data sources and download instructions are described in:
-`testdata/README.md`
-
-* Download chromosome-level VCFs from IGSR (1000 Genomes FTP)
-* Download chromosome-level genomes VCFs from the gnomAD downloads page
-* It is recommended to download the index files as well (e.g., `.tbi`)
+More details (data sources and step-by-step instructions) are described in `testdata/README.md`
 
