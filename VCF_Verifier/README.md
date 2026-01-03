@@ -10,7 +10,7 @@ It verifies:
 
 Validation is performed at the site level (unique `(CHROM, POS)`), and results are saved as a CSV report under `./reports/`.
 
-## What this script verifies
+## What this script does
 
 ### 1. Metadata verification (applies to both low/high)
 It checks whether the anonymized header contains expected anonymized metadata:
