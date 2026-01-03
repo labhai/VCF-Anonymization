@@ -135,7 +135,7 @@ Example (format):
 ```
 ================ 검증 결과 요약 ================
 총 검증 파일 쌍 수 (origin-anony): 2
-재익명화 필요 파일 수: 1
+재익명화 필요 파일 수: 0
 총 처리 시간: 3.214 sec
 리포트 저장 위치: /.../reports/VCF_anonymization_verification_report.csv
 ================================================
@@ -144,7 +144,7 @@ high_0.01_anony_sample2.vcf.gz: ok  100.00%(10/10)  (meta 2/2, variant 8/8)
 low_anony_sample2.vcf.gz: ok  100.00%(2/2)  (meta 2/2, variant 0/0)
 ```
 
-## Notes / Pitfalls
+## Notes
 
 * Only `.vcf.gz` and `.vcf.bgz` files are scanned in both origin/anonymized directories.
 * Validation is **site-level** by `(CHROM, POS)`. If multiple records share the same site, the last observed target definition may overwrite earlier ones.
