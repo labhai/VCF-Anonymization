@@ -45,7 +45,7 @@ Install from the repository root (recommended inside a virtual environment):
 
 ```bash
 python -m pip install pysam
-````
+```
 
 ⚠️ Input VCFs must be indexed when compressed (`.vcf.gz` / `.vcf.bgz`) so that `pysam.fetch()` can iterate records.
 
@@ -137,6 +137,6 @@ Example format:
 ## Notes / Pitfalls
 
 * Only `.vcf.gz` and `.vcf.bgz` files are processed.
-* In `high` mode, **STR masking has priority**.
+* In `high` mode, STR masking has priority.
   MAF masking is applied only if STR masking did not modify the record.
 * Output indexing uses `csi=True`, so index extension may be `.csi` depending on the environment.
