@@ -9,9 +9,15 @@ This is an anonymization tool designed to selectively remove/replace information
   Anonymizes VCFs with two levels:
   - `low` : header/metadata only
   - `high` : metadata + STR masking + rare-variant ALT masking by MAF threshold
-### `VCF_Verifier/vcf_anonymization_verifier.py`
+### `vcf_verifier/vcf_anonymization_verifier.py`
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
+
+
+
+
+
+
   Demo dataset folder for quick testing.
   - This repository provides index files only by default (due to file size limits).
   - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
@@ -89,7 +95,7 @@ python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 
 ### 4. Run Verification
 ```
-python VCF_Verifier/vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
+python vcf_verifier/vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 ```
 
 ## Test Dataset (Demo Data)
