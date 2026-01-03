@@ -120,7 +120,7 @@ Example format:
 ======================================
 ```
 
-## Notes / Pitfalls
+## Notes
 
 * Only `.vcf.gz` and `.vcf.bgz` files are processed.
 * In `high` mode, STR masking has priority.
