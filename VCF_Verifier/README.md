@@ -1,38 +1,38 @@
 # VCF Anonymization Verifier (`vcf_anonymization_verifier.py`)
 
 `vcf_anonymization_verifier.py` validates whether anonymization rules were applied correctly by comparing:
-- an **original VCF directory** (`-o`)
-- an **anonymized VCF directory** (`-a`)
+- original VCF directory (`-o`)
+- anonymized VCF directory (`-a`)
 
 It verifies:
-- **metadata anonymization** (header lines)
-- **variant anonymization** (STR masking / MAF-based ALT masking) for **high-level outputs**
+- metadata anonymization (header lines)
+- variant anonymization (STR masking / MAF-based ALT masking) for high-level outputs
 
-Validation is performed at the **site level** (unique `(CHROM, POS)`), and results are saved as a **CSV report** under `./reports/`.
+Validation is performed at the site level (unique `(CHROM, POS)`), and results are saved as a CSV report under `./reports/`.
 
 ## What this script verifies
 
-### 1) Metadata verification (applies to both low/high)
+### 1. Metadata verification (applies to both low/high)
 It checks whether the anonymized header contains expected anonymized metadata:
 
 - If the original header contains `##cmdline=...`  
   → anonymized header must contain `##cmdline=.`
 
 - If the original header contains `##reference=...`  
-  → anonymized header must contain a `##reference=` line **without path separators (`/`)**  
+  → anonymized header must contain a `##reference=` line without path separators (`/`)
   (i.e., path removed and filename-only form)
 
 > Note: this verifier checks the *presence/form* of anonymized metadata in the anonymized header.
 
-### 2) Variant verification (high-level files only)
-For **high-level outputs** (filename prefix: `high_` or `strong_`), this verifier validates variant masking using a two-step approach:
+### 2. Variant verification (high-level files only)
+For high-level outputs, this verifier validates variant masking using a two-step approach:
 
 #### Step A. Collect anonymization targets from the original VCF
 It scans the original VCF and collects “target sites” that should be anonymized, based on:
-- **STR target**: any ALT contains an STR-like repeat pattern
-- **MAF target**: site-level MAF from `INFO` is `< --maf`
+- STR target: any ALT contains an STR-like repeat pattern
+- MAF target: site-level MAF from `INFO` is `< --maf`
 
-**Priority rule:** if a site is both STR and MAF target, it is treated as **STR**  
+Priority rule: if a site is both STR and MAF target, it is treated as STR
 (same priority as the anonymizer).
 
 Targets are stored as:
@@ -42,17 +42,15 @@ Targets are stored as:
 #### Step B. Check anonymized VCF at the same sites
 For each target site `(CHROM, POS)` in the anonymized VCF:
 
-- **STR target success condition**
-  - anonymized ALT is **different from** original ALT, and
+- STR target success condition
+  - anonymized ALT is different from original ALT, and
   - at least one ALT contains `'N'`
 
-- **MAF target success condition**
-  - First, recompute site-level MAF from anonymized record `INFO` (same logic as anonymizer: `MAF` → `AF` → `AC/AN`)
-  - If MAF cannot be computed (`None`): treated as **success**
+- MAF target success condition
+  - First, recompute site-level MAF from anonymized record `INFO`
+  - If MAF cannot be computed (`None`): treated as success
   - Else if MAF is still `< --maf`:
     - ALT must be fully masked as `"."` (i.e., ALT is empty / `(".",)`)
-  - Else (no longer rare): treated as **success** (interpreted as reduced identifiability)
-
 
 ## File matching rule (origin ↔ anonymized)
 
@@ -62,9 +60,7 @@ Example:
 - anonymized filename: `high_0.01_anony_sample2.vcf.gz`
 - matched original filename: `sample2.vcf.gz`
 
-The script scans all `.vcf.gz` / `.vcf.bgz` files in the origin directory and finds corresponding anonymized files in the anonymized directory using:
-
-- `f.split("anony_", 1)[-1] == <origin_filename>`
+The script scans all `.vcf.gz` / `.vcf.bgz` files in the origin directory and finds corresponding anonymized files
 
 If no anonymized match exists, it prints a warning and skips that origin file.
 
@@ -84,12 +80,6 @@ python VCF_Verifier/vcf_anonymization_verifier.py \
 * `-o, --origin` : directory containing original VCF files
 * `-a, --anony` : directory containing anonymized VCF files
 * `--maf <float>` : MAF threshold used for identifying MAF targets (default: `0.01`)
-
-> STR detection parameters are fixed in this script to:
->
-> * min motif = 1, max motif = 6, min repeat = 7
->   (same defaults as the anonymizer)
-
 
 ## Output
 
