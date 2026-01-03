@@ -41,7 +41,7 @@ If STR masking did not modify any ALT in a record, the script computes a site-le
 ### Command (run from repository root)
 
 ```bash
-python VCF_Anonymizer/vcf_anonymizer.py \
+python vcf_anonymizer/vcf_anonymizer.py \
   -i <input_vcf_dir> \
   -o <output_vcf_dir> \
   --level <low|high> \
