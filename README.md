@@ -12,25 +12,19 @@ This is an anonymization tool designed to selectively remove/replace information
 ### `vcf_verifier/vcf_anonymization_verifier.py`
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
-
-
-
-
-
-
   Demo dataset folder for quick testing.
   - This repository provides index files only by default (due to file size limits).
   - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
   - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
-## Download VCF Anonymization
+## Download VCF-Anonymization
 Clone this repository to your local machine:
 ```
 git clone https://github.com/labhai/VCF-Anonymization.git
 cd VCF-Anonymization
 ```
 
-## Requirements and Install
+## Requirements and Install VCF-Anonymization
 
 ### Requirements
  - Python 3.9+ (recommended: 3.10+)
