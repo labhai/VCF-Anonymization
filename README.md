@@ -68,33 +68,19 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ## Example (Quickstart)
 This quickstart follows the same demo workflow: `testdata/` (input) → `anonydata/` (output) → verification report.
 
-### 1. Prepare demo input/output folders
-Before running, download demo VCFs and place them into `testdata/` so filenames match the index files.
-See: `testdata/README.md`
-
-Expected structure:
-```
-testdata/
-├─ sample2.vcf.gz
-├─ sample2.vcf.gz.csi
-├─ sample3.vcf.bgz
-├─ sample3.vcf.bgz.tbi
-└─ README.md
-```
-
-### 2. Run high-level anonymization
+### 1. Run high-level anonymization
 ```bash
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
-### 3. Run Low-level anonymization
+### 2. Run Low-level anonymization
 
 ```bash
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 ```
 
-### 4. Run Verification
-```
+### 3. Run verification
+```bash
 python vcf_verifier/vcf_anonymization_verifier.py -o ./testdata -a ./anonydata
 ```
 
