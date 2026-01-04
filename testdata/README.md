@@ -1,3 +1,16 @@
+## Prepare demo input/output folders
+Before running, download demo VCFs and place them into `testdata/` so filenames match the index files.
+
+Expected structure:
+```
+testdata/
+├─ sample2.vcf.gz
+├─ sample2.vcf.gz.csi
+├─ sample3.vcf.bgz
+├─ sample3.vcf.bgz.tbi
+└─ README.md
+```
+
 ## Sample file examples  
  - IGSR chr10: `sample2.vcf.gz`  
  - gnomAD chr21: `sample3.vcf.bgz`
