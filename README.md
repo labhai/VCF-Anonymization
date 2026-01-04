@@ -5,11 +5,11 @@ This is an anonymization tool designed to selectively remove/replace information
 
 ## Repository Structure
 
-### `vcf_anonymizer/vcf_anonymizer.py`
+### `vcf_anonymizer`
   Anonymizes VCFs with two levels:
   - `low` : header/metadata only
   - `high` : metadata + STR masking + rare-variant ALT masking by MAF threshold
-### `vcf_verifier/vcf_anonymization_verifier.py`
+### `vcf_verifier`
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
   Demo dataset folder for quick testing.
