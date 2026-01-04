@@ -4,6 +4,7 @@ This is an anonymization tool designed to selectively remove/replace information
 
 
 ## Repository Structure
+
 ### `vcf_anonymizer/vcf_anonymizer.py`
   Anonymizes VCFs with two levels:
   - `low` : header/metadata only
@@ -17,6 +18,7 @@ This is an anonymization tool designed to selectively remove/replace information
   - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
 ## Download VCF Anonymization
+
 Clone this repository to your local machine:
 ```
 git clone https://github.com/labhai/VCF-Anonymization.git
@@ -24,6 +26,7 @@ cd VCF-Anonymization
 ```
 
 ## Requirements and Installation
+
 ### Requirements
  - Python 3.9+ (recommended: 3.10+)
  - Git (optional, only if you clone the repository)
@@ -58,6 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 ## Example (Quickstart)
+
 This quickstart follows the same demo workflow: `testdata/` (input) → `anonydata/` (output) → verification report.
 
 ### 1. Run high-level anonymization
@@ -66,7 +70,6 @@ python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level hig
 ```
 
 ### 2. Run low-level anonymization
-
 ```bash
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
 ```
