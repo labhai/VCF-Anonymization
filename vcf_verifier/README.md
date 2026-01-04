@@ -111,7 +111,7 @@ If the file already exists, it creates:
 | `unmasked_positions`  | for `fail`, list of `CHROM:POS` that did not satisfy masking rules; `-` if none |
 
 
-## Expected console logs
+### Expected console logs
 
 During execution, the script prints per pair:
 
