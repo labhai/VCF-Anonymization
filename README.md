@@ -4,7 +4,7 @@ This is an anonymization tool designed to selectively remove/replace information
 
 
 ## Repository Structure
-
+---
 ### `vcf_anonymizer/vcf_anonymizer.py`
   Anonymizes VCFs with two levels:
   - `low` : header/metadata only
@@ -17,15 +17,16 @@ This is an anonymization tool designed to selectively remove/replace information
   - Demo VCF files must be downloaded separately (see Test Dataset (Demo Data) below).
   - `testdata/README.md` contains the data source description and step-by-step download instructions.
 
-## Download VCF-Anonymization
+## Download VCF Anonymization
+---
 Clone this repository to your local machine:
 ```
 git clone https://github.com/labhai/VCF-Anonymization.git
 cd VCF-Anonymization
 ```
 
-## Requirements and Install VCF-Anonymization
-
+## Requirements and Installation
+---
 ### Requirements
  - Python 3.9+ (recommended: 3.10+)
  - Git (optional, only if you clone the repository)
@@ -34,7 +35,7 @@ cd VCF-Anonymization
 ⚠️ Important Note: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
 For the demo dataset, index files are included in `testdata/` (VCF files are downloaded separately; see Test Dataset (Demo Data)).
 
-### Install (recommended: use a virtual environment)
+### Installation (recommended: use a virtual environment)
 The steps below use a virtual environment (`.venv`) and include a quick verification command to confirm that `pysam` was installed successfully.
 
 #### macOS / Linux
@@ -60,6 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 ## Example (Quickstart)
+---
 This quickstart follows the same demo workflow: `testdata/` (input) → `anonydata/` (output) → verification report.
 
 ### 1. Run high-level anonymization
@@ -67,7 +69,7 @@ This quickstart follows the same demo workflow: `testdata/` (input) → `anonyda
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
-### 2. Run Low-level anonymization
+### 2. Run low-level anonymization
 
 ```bash
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
