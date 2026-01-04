@@ -95,7 +95,7 @@ pysam.tabix_index(output_path, preset="vcf", csi=True, force=True)
 
 So each output VCF will have an index file generated (typically `.csi` when `csi=True`).
 
-## Expected Console Logs
+### Expected Console Logs
 
 The script prints progress per file:
 
