@@ -83,14 +83,14 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 This quickstart follows the same demo workflow: `testdata/` (input) → `anonydata/` (output) → verification report.
 
-### 1. Run high-level anonymization
-```bash
-python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
-```
-
-### 2. Run low-level anonymization
+### 1. Run low-level anonymization
 ```bash
 python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level low
+```
+
+### 2. Run high-level anonymization
+```bash
+python vcf_anonymizer/vcf_anonymizer.py -i ./testdata -o ./anonydata --level high --maf 0.01
 ```
 
 ### 3. Run verification
