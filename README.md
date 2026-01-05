@@ -2,7 +2,7 @@
 
 This is an anonymization tool designed to selectively remove/replace information in VCF (Variant Call Format) files that carry a high risk of re-identification, reducing privacy exposure while preserving the VCF structure and downstream analysis usability as much as possible.
 
-### What is VCF?
+### What Is VCF?
 **VCF (Variant Call Format)** is a standard text-based file format used in bioinformatics to store genetic variants (e.g., SNPs, indels) and related annotations. A VCF includes metadata headers (`##...`), a column header (`#CHROM ...`), and variant records with alleles and optional INFO/FORMAT fields.
 Because VCFs can contain rich metadata and variant patterns, sharing them without protection may increase re-identification risk.
 
