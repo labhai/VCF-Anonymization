@@ -25,7 +25,7 @@ Genomic variants can be highly identifying. In particular:
   - `high`
     - Includes all `low` rules, plus:
     - STR masking (ALT): detect STR-like repeats in `ALT` alleles (default: motif length 1–6 bp, ≥7 repeats) and mask repeat regions with `N`
-    - Rare-variant masking (ALT): for non-STR sites with **MAF < threshold** (default `0.01`), replace `ALT` with `.`
+    - Rare-variant masking (ALT): for non-STR sites with MAF < threshold (default `0.01`), replace `ALT` with `.`
 ### `vcf_verifier`
   Compare original vs. anonymized VCFs and export a CSV report
 ### `testdata/`
