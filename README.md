@@ -52,7 +52,7 @@ cd VCF-Anonymization
  - Python package: 'pysam'
 
 ⚠️ Important Note: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
-For the demo dataset, index files are included in `testdata/` (VCF files are downloaded separately; see Test Dataset (Demo Data)).
+For the demo dataset, index files are included in `testdata/` (VCF files are downloaded separately; see [Test Dataset (Demo Data)](https://github.com/labhai/VCF-Anonymization/blob/main/README.md#test-dataset-demo-data)).
 
 ### Installation (recommended: use a virtual environment)
 The steps below use a virtual environment (`.venv`) and include a quick verification command to confirm that `pysam` was installed successfully.
