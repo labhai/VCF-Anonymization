@@ -49,7 +49,7 @@ cd VCF-Anonymization
 ### Requirements
  - Python 3.9+ (recommended: 3.10+)
  - Git (optional, only if you clone the repository)
- - Python package: 'pysam'
+ - Python package: `pysam`
 
 ⚠️ Important Note: If the input VCF is compressed (e.g., `.vcf.gz` or `.vcf.bgz`), `pysam` needs an index file (`.tbi` or `.csi`) to iterate records via `fetch()`.
 For the demo dataset, index files are included in `testdata/` (VCF files are downloaded separately; see [Test Dataset (Demo Data)](https://github.com/labhai/VCF-Anonymization/blob/main/README.md#test-dataset-demo-data)).
