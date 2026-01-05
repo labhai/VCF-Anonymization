@@ -2,7 +2,7 @@
 
 `vcf_anonymizer.py` is a VCF anonymization script designed to reduce re-identification risk by anonymizing:
 - VCF header/metadata (common to all levels)
-- ALT (Alternate Allele): in each VCF variant record, `REF` is the reference allele and `ALT` lists one or more alternate alleles observed at that genomic position. In this repository, `ALT` is the main variant-level target in `high` mode.
+- ALT (Alternate Allele): In a VCF variant record, `REF` and `ALT` are standard fields—`REF` is the reference allele and `ALT` lists one or more alternate alleles observed at that position. In this repository, `ALT` is the main variant-level target in `high` mode.
   - ALT sequences via STR masking (high level)
   - rare variants via MAF-threshold-based ALT masking (high level)
 
