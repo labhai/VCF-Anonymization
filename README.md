@@ -28,6 +28,8 @@ Genomic variants can be highly identifying. In particular:
     - Rare-variant masking (ALT): for non-STR sites with MAF < threshold (default `0.01`), replace `ALT` with `.`
 ### `vcf_verifier`
   Compare original vs. anonymized VCFs and export a CSV report
+  - Checks (low): header rules (`##cmdline`, `##reference`)
+  - Checks (high): header rules + STR masking + MAF-based ALT masking (site-level)
 ### `testdata/`
   Demo dataset folder for quick testing.
   - This repository provides index files only by default (due to file size limits).
