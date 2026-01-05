@@ -7,13 +7,12 @@ This is an anonymization tool designed to selectively remove/replace information
 Because VCFs can contain rich metadata and variant patterns, sharing them without protection may increase re-identification risk.
 
 ### Why Anonymization Is Necessary
-- **Header (metadata) anonymization**
-  
+- **Header (metadata) anonymization**  
 Even if a VCF does not contain explicit personal identifiers, the header metadata can include sensitive operational details (e.g., institution-specific paths, usernames, internal server locations, or full command lines used to generate the file). When shared externally, these fields may leak unnecessary environment or provenance information.
 
-- **Variant-level anonymization**
-Genomic variants can be highly identifying. In particular:
-  - **STR (Short Tandem Repeat)** patterns may reflect individual-specific repeat structures.
+- **Variant-level anonymization**  
+Genomic variants can be highly identifying. In particular:  
+  - **STR (Short Tandem Repeat)** patterns may reflect individual-specific repeat structures.  
   - **Rare variants** (very low population allele frequency) can be unique to an individual or a small subgroup, increasing re-identification risk—especially when combined with other datasets.
 
 ## Repository Structure
