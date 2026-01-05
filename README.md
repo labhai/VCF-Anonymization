@@ -8,6 +8,7 @@ Because VCFs can contain rich metadata and variant patterns, sharing them withou
 
 ### Why Anonymization Is Necessary
 - **Header (metadata) anonymization**
+- 
 Even if a VCF does not contain explicit personal identifiers, the header metadata can include sensitive operational details (e.g., institution-specific paths, usernames, internal server locations, or full command lines used to generate the file). When shared externally, these fields may leak unnecessary environment or provenance information.
 
 - **Variant-level anonymization**
