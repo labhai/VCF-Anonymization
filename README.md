@@ -13,7 +13,11 @@ Even if a VCF does not contain explicit personal identifiers, the header metadat
 - **Variant-level anonymization**  
 Genomic variants can be highly identifying. In particular:  
   - **STR (Short Tandem Repeat)** patterns may reflect individual-specific repeat structures.  
-  - **Rare variants** (very low population allele frequency) can be unique to an individual or a small subgroup, increasing re-identification risk—especially when combined with other datasets.
+  - **Rare variants** (very low population allele frequency) can be unique to an individual or a small subgroup, increasing re-identification risk—especially when combined with other datasets.  
+
+  To clarify the criteria used in this repository:
+    - **Motif (in STRs)**: the short repeating unit in an STR (e.g., `TAA` in `TAATAATAA...`). This tool detects STR-like repeats when a motif (default length 1–6 bp) is repeated ≥ 7 times.
+    - **MAF (Minor Allele Frequency)**: the population frequency of the less common allele at a site. In this tool, “rare variants” are sites with MAF < threshold (user-configurable; default `0.01`).
 
 ## Repository Structure
 
